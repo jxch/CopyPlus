@@ -5,12 +5,23 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.jxch.copyplus.copyplus.MainController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.jxch.copyplus.copyplus.controller.MainController">
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <HBox alignment="TOP_CENTER">
+        <Label>快捷键：</Label>
+        <Label fx:id="usable"/>
+        <TextField fx:id="shortcutKeys" onKeyPressed="#enterShortcutKeys" minWidth="100"/>
+        <Label>JS模板：</Label>
+        <TextArea fx:id="jsTemplate">
+
+        </TextArea>
+        <Button>添加</Button>
+    </HBox>
+
+
+
 </VBox>

@@ -18,7 +18,7 @@ public class MainApplication extends Application implements NativeKeyListener {
     @Override
     public void start(@NonNull Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(MAIN_FXML));
-        Scene scene = new Scene(fxmlLoader.load(), 500, 800);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
