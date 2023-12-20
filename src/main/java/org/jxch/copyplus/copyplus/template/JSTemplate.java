@@ -19,10 +19,15 @@ public class JSTemplate {
      *
      * @return RES_NAME
      */
-    public static String eval(String jsFunction, String clipboard) throws ScriptException {
-        String jsCode = String.format("var %s = %s('%s')", RES_NAME, jsFunction, clipboard);
-        ENGINE.eval(jsCode);
-        return ENGINE.get(RES_NAME).toString();
+    public static String eval(String jsFunction, String clipboard)  {
+        try {
+            String jsCode = String.format("var %s = %s('%s')", RES_NAME, jsFunction, clipboard);
+            ENGINE.eval(jsCode);
+            return ENGINE.get(RES_NAME).toString();
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 }

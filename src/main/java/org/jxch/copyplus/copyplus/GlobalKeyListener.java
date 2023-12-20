@@ -10,65 +10,72 @@ import javafx.scene.input.ClipboardContent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.jxch.copyplus.copyplus.db.TemplateDao;
+import org.jxch.copyplus.copyplus.template.JSTemplate;
 
-import java.util.List;
+import java.util.*;
 
 
 @Slf4j
-public class GlobalKeyListener  implements NativeKeyListener {
+public class GlobalKeyListener implements NativeKeyListener {
+
+    private static final Set<String> GLOBAL_SHORTCUT = Collections.synchronizedSortedSet(new TreeSet<>());
+
     @Override
     public void nativeKeyPressed(@NonNull NativeKeyEvent e) {
-        log.info("{}, {}", e.getKeyCode(), NativeKeyEvent.getKeyText(e.getKeyCode()));
         List<String> shortcutKeys = TemplateDao.getShortcutKeys();
-//
-//        String keyName = NativeKeyEvent.getKeyText(e.getKeyCode());
-//        // 判断是否按下了修饰键
-//        if ((e.getModifiers() == NativeKeyEvent.CTRL_L_MASK || (e.getModifiers() == NativeKeyEvent.CTRL_R_MASK) {
-//            keyName = Objects.equals(keyName, "Ctrl") ? "Ctrl" : "Ctrl+" + keyName;
-//        }
-//        if (event.isAltDown()) {
-//            keyName = Objects.equals(keyName, "Alt") ? "Alt" : "Alt+" + keyName;
-//        }
-//        if (event.isShiftDown()) {
-//            keyName = Objects.equals(keyName, "Shift") ? "Shift" : "Shift+" + keyName;
-//        }
-//        if (event.isMetaDown()) {
-//            keyName = Objects.equals(keyName, "Windows") ? "Windows" : "Windows+" + keyName;
-//        }
-//        if (notKey(sourceKeyName)) {
-//            ArrayList<String> keys = new ArrayList<>(Arrays.asList(keyName.split("\\+")));
-//            if (keys.size() > 1) {
-//                keys.remove(keys.size() - 1);
-//                log.info(keys.toString());
-//                keyName = String.join("+", keys);
-//            }
-//        }
 
-    }
+        String keyName = NativeKeyEvent.getKeyText(e.getKeyCode());
+        GLOBAL_SHORTCUT.add(keyName);
 
-    public static void main(String[] args) {
-        NativeKeyEvent e = null;
-        if (e.getModifiers() == NativeKeyEvent.CTRL_L_MASK && e.getKeyCode() == NativeKeyEvent.VC_V) {
-
-            // 获取系统的粘贴板对象
-            Platform.runLater(() -> {
-                Clipboard clipboard = Clipboard.getSystemClipboard();
-                if (clipboard.hasString()) {
-                    String content = clipboard.getString();
-                    String contentT = "This is from my JavaFX program: " + content;
-
-                    ClipboardContent newContent = new ClipboardContent();
-                    newContent.putString(contentT);
-                    clipboard.setContent(newContent);
-
-                    log.info(contentT);
-                }
-            });
-
+        if (Objects.equals(e.getModifiers(), NativeKeyEvent.CTRL_L_MASK)
+                || Objects.equals(e.getModifiers(), NativeKeyEvent.CTRL_R_MASK)) {
+            GLOBAL_SHORTCUT.add("Ctrl");
         }
+        if (Objects.equals(e.getModifiers(), NativeKeyEvent.SHIFT_L_MASK)
+                || Objects.equals(e.getModifiers(), NativeKeyEvent.SHIFT_R_MASK)) {
+            GLOBAL_SHORTCUT.add("Shift");
+        }
+        if (Objects.equals(e.getModifiers(), NativeKeyEvent.ALT_L_MASK)
+                || Objects.equals(e.getModifiers(), NativeKeyEvent.ALT_R_MASK)) {
+            GLOBAL_SHORTCUT.add("Alt");
+        }
+        if (Objects.equals(e.getModifiers(), NativeKeyEvent.META_L_MASK)
+                || Objects.equals(e.getModifiers(), NativeKeyEvent.META_R_MASK)) {
+            GLOBAL_SHORTCUT.add("Windows");
+        }
+
+        if (!FXUtils.notKey(keyName)) {
+            String shortcut = String.join("+", GLOBAL_SHORTCUT);
+
+            if (shortcutKeys.contains(shortcut)) {
+                log.info("{}", shortcut);
+                Platform.runLater(() -> {
+                    Clipboard clipboard = Clipboard.getSystemClipboard();
+                    if (clipboard.hasString()) {
+                        String content = clipboard.getString();
+                        String template = TemplateDao.searchByShortcut(shortcut).getTemplate();
+                        String contentT = JSTemplate.eval(template,content);
+
+                        ClipboardContent newContent = new ClipboardContent();
+                        newContent.putString(contentT);
+                        clipboard.setContent(newContent);
+                        log.info("{}", contentT);
+                    }
+                });
+            }
+
+            GLOBAL_SHORTCUT.clear();
+        }
+
     }
 
-    public static void registerNativeHook()  {
+    @Override
+    public void nativeKeyReleased(@NonNull NativeKeyEvent e) {
+        String keyName = NativeKeyEvent.getKeyText(e.getKeyCode());
+        GLOBAL_SHORTCUT.remove(keyName);
+    }
+
+    public static void registerNativeHook() {
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
