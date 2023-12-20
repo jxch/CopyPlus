@@ -21,5 +21,6 @@ module org.jxch.copyplus.copyplus {
     opens org.jxch.copyplus.copyplus to javafx.fxml;
     exports org.jxch.copyplus.copyplus;
     exports org.jxch.copyplus.copyplus.controller;
+    exports org.jxch.copyplus.copyplus.db;
     opens org.jxch.copyplus.copyplus.controller to javafx.fxml;
 }

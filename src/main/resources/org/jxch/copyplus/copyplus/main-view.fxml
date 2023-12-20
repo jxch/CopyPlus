@@ -8,20 +8,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Separator?>
 <VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.jxch.copyplus.copyplus.controller.MainController">
 
-    <HBox alignment="TOP_CENTER">
-        <Label>快捷键：</Label>
-        <Label fx:id="usable"/>
-        <TextField fx:id="shortcutKeys" onKeyPressed="#enterShortcutKeys" minWidth="100"/>
-        <Label>JS模板：</Label>
-        <TextArea fx:id="jsTemplate">
-
-        </TextArea>
-        <Button>添加</Button>
-    </HBox>
-
-
+    <VBox fx:id="templateBox"/>
+    <Button onAction="#add">添加</Button>
 
 </VBox>

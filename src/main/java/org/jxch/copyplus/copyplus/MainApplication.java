@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jxch.copyplus.copyplus.config.RocksDBConfig;
 
 import java.io.IOException;
 
@@ -17,14 +18,17 @@ public class MainApplication extends Application implements NativeKeyListener {
 
     @Override
     public void start(@NonNull Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(MAIN_FXML));
+        FXMLLoader fxmlLoader = FXUtils.getFXMLLoader(MAIN_FXML);
         Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
 
         GlobalKeyListener.registerNativeHook();
-        stage.setOnCloseRequest((event) -> GlobalKeyListener.unregisterNativeHook());
+        stage.setOnCloseRequest((event) -> {
+            GlobalKeyListener.unregisterNativeHook();
+            RocksDBConfig.close();
+        });
     }
 
     public static void main(String[] args) {
