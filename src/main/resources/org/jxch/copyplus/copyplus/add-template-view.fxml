@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+<VBox fx:id="panel" alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.jxch.copyplus.copyplus.controller.AddTemplateController">
 
     <HBox alignment="TOP_CENTER">
@@ -16,6 +16,10 @@
                 <Label>模板类型：</Label>
                 <ChoiceBox fx:id="types">
                 </ChoiceBox>
+            </HBox>
+            <HBox>
+                <Label>直接粘贴：</Label>
+                <ChoiceBox fx:id="isPaste"/>
             </HBox>
             <Label fx:id="usable"/>
         </VBox>

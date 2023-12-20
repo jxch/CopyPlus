@@ -13,6 +13,7 @@ public class TemplateDto {
     private String shortcut;
     private String type;
     private String template;
+    private String isPaste;
 
     public String typeId() {
         return TemplateDao.getTypeId(getShortcut());
@@ -20,6 +21,10 @@ public class TemplateDto {
 
     public String templateId() {
         return TemplateDao.getTemplateId(getShortcut());
+    }
+
+    public String pasteId() {
+        return TemplateDao.getPasteId(getShortcut());
     }
 
 }

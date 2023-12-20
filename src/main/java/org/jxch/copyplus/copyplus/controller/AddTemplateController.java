@@ -2,14 +2,16 @@ package org.jxch.copyplus.copyplus.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.jxch.copyplus.copyplus.FXUtils;
 import org.jxch.copyplus.copyplus.db.TemplateDao;
 import org.jxch.copyplus.copyplus.db.TemplateDto;
 
@@ -20,6 +22,10 @@ import java.util.*;
 @FXMLController(fxml = "add-template-view.fxml")
 public class AddTemplateController extends RootController implements ControllerInit<TemplateDto> {
     @FXML
+    public ChoiceBox<String> isPaste;
+    @FXML
+    public VBox panel;
+    @FXML
     private ChoiceBox<String> types;
     @FXML
     private TextField shortcutKeys;
@@ -27,6 +33,13 @@ public class AddTemplateController extends RootController implements ControllerI
     private Label usable;
     @FXML
     private TextArea jsTemplate;
+    private String shortcutOld;
+    @Setter
+    @Getter
+    private Node thisNode;
+    @Setter
+    @Getter
+    private Separator thisSeparator;
 
     private boolean notKey(String keyName) {
         return Objects.equals(keyName, "Ctrl")
@@ -68,15 +81,20 @@ public class AddTemplateController extends RootController implements ControllerI
         String shortcut = shortcutKeys.getText();
         String type = types.getValue();
         String template = jsTemplate.getText();
-        TemplateDao.put(TemplateDto.builder()
+        String paste = isPaste.getValue();
+        TemplateDao.putOrUpdate(TemplateDto.builder()
                 .shortcut(shortcut)
                 .type(type)
                 .template(template)
-                .build());
+                .isPaste(paste)
+                .build(), shortcutOld);
+        FXUtils.notification("添加成功");
     }
 
     public void del(ActionEvent actionEvent) {
-
+        TemplateDao.del(Objects.equals(shortcutOld, null) ? shortcutKeys.getText() : shortcutOld);
+        FXUtils.notification("删除成功");
+        RootController.getControllerBean(MainController.class).removeNode(this);
     }
 
     @Override
@@ -91,6 +109,9 @@ public class AddTemplateController extends RootController implements ControllerI
 
         types.getItems().add("js");
         types.setValue("js");
+        isPaste.getItems().add("true");
+        isPaste.getItems().add("false");
+        isPaste.setValue("true");
     }
 
     @Override
@@ -98,6 +119,8 @@ public class AddTemplateController extends RootController implements ControllerI
         jsTemplate.setText(dto.getTemplate());
         types.setValue(dto.getType());
         shortcutKeys.setText(dto.getShortcut());
+        isPaste.setValue(dto.getIsPaste());
+        shortcutOld = dto.getShortcut();
     }
 
 }
