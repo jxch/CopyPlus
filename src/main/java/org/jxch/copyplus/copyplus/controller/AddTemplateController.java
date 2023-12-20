@@ -79,7 +79,7 @@ public class AddTemplateController extends RootController implements ControllerI
 
     public void add(ActionEvent actionEvent) {
         if (Objects.equals(usable.getText(), "不可用")) {
-            FXUtils.notification("当前快捷键已经被占用");
+            FXUtils.notification("当前快捷键不可用，请换一个试试");
             return;
         }
 
