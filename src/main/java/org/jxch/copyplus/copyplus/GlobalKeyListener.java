@@ -10,8 +10,12 @@ import javafx.scene.input.ClipboardContent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.jxch.copyplus.copyplus.db.TemplateDao;
+import org.jxch.copyplus.copyplus.db.TemplateDto;
 import org.jxch.copyplus.copyplus.template.JSTemplate;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.*;
 
 
@@ -46,20 +50,35 @@ public class GlobalKeyListener implements NativeKeyListener {
 
         if (!FXUtils.notKey(keyName)) {
             String shortcut = String.join("+", GLOBAL_SHORTCUT);
-
             if (shortcutKeys.contains(shortcut)) {
+                TemplateDto dto = TemplateDao.searchByShortcut(shortcut);
+
                 log.info("{}", shortcut);
                 Platform.runLater(() -> {
                     Clipboard clipboard = Clipboard.getSystemClipboard();
                     if (clipboard.hasString()) {
-                        String content = clipboard.getString();
-                        String template = TemplateDao.searchByShortcut(shortcut).getTemplate();
-                        String contentT = JSTemplate.eval(template,content);
+                        String contentT = JSTemplate.eval(dto.getTemplate(), clipboard.getString());
 
                         ClipboardContent newContent = new ClipboardContent();
                         newContent.putString(contentT);
                         clipboard.setContent(newContent);
                         log.info("{}", contentT);
+                        if (Boolean.parseBoolean(dto.getIsPaste())){
+                            try {
+                                // 创建一个Robot对象
+                                Robot robot = new Robot();
+                                // 模拟按下Ctrl键
+                                robot.keyPress(KeyEvent.VK_CONTROL);
+                                // 模拟按下V键
+                                robot.keyPress(KeyEvent.VK_V);
+                                // 模拟释放V键
+                                robot.keyRelease(KeyEvent.VK_V);
+                                // 模拟释放Ctrl键
+                                robot.keyRelease(KeyEvent.VK_CONTROL);
+                            } catch (AWTException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
                     }
                 });
             }
