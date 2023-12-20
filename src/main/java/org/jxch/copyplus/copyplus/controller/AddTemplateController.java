@@ -14,10 +14,7 @@ import org.jxch.copyplus.copyplus.db.TemplateDao;
 import org.jxch.copyplus.copyplus.db.TemplateDto;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Slf4j
 @FXMLController(fxml = "add-template-view.fxml")
@@ -42,34 +39,27 @@ public class AddTemplateController extends RootController implements ControllerI
     protected void enterShortcutKeys(@NonNull KeyEvent event) {
         // 获取按键的编码
         KeyCode keyCode = event.getCode();
-        // 获取按键的名称
+        // 获取按键的名
         String keyName = keyCode.getName();
-        String sourceKeyName = keyName;
+        Set<String> keys = new TreeSet<>(Collections.singletonList(keyName));
+
         // 判断是否按下了修饰键
         if (event.isControlDown()) {
-            keyName = Objects.equals(keyName, "Ctrl") ? "Ctrl" : "Ctrl+" + keyName;
+            keys.add("Ctrl");
         }
         if (event.isAltDown()) {
-            keyName = Objects.equals(keyName, "Alt") ? "Alt" : "Alt+" + keyName;
+            keys.add("Alt");
         }
         if (event.isShiftDown()) {
-            keyName = Objects.equals(keyName, "Shift") ? "Shift" : "Shift+" + keyName;
+            keys.add("Shift");
         }
         if (event.isMetaDown()) {
-            keyName = Objects.equals(keyName, "Windows") ? "Windows" : "Windows+" + keyName;
-        }
-        if (notKey(sourceKeyName)) {
-            ArrayList<String> keys = new ArrayList<>(Arrays.asList(keyName.split("\\+")));
-            if (keys.size() > 1) {
-                keys.remove(keys.size() - 1);
-                log.info(keys.toString());
-                keyName = String.join("+", keys);
-            }
+            keys.add("Windows");
         }
 
-        shortcutKeys.setText(keyName);
+        shortcutKeys.setText(String.join("+", keys));
         usable.setText(event.isConsumed()
-                || notKey(sourceKeyName)
+                || notKey(keyName)
                 || !TemplateDao.notHasShortcut(keyName) ? "不可用" : "可用");
     }
 
@@ -104,7 +94,7 @@ public class AddTemplateController extends RootController implements ControllerI
     }
 
     @Override
-    public  void init(@NonNull TemplateDto dto) {
+    public void init(@NonNull TemplateDto dto) {
         jsTemplate.setText(dto.getTemplate());
         types.setValue(dto.getType());
         shortcutKeys.setText(dto.getShortcut());

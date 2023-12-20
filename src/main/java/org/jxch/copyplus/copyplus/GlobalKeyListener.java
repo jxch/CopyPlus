@@ -9,6 +9,9 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jxch.copyplus.copyplus.db.TemplateDao;
+
+import java.util.List;
 
 
 @Slf4j
@@ -16,6 +19,31 @@ public class GlobalKeyListener  implements NativeKeyListener {
     @Override
     public void nativeKeyPressed(@NonNull NativeKeyEvent e) {
         log.info("{}, {}", e.getKeyCode(), NativeKeyEvent.getKeyText(e.getKeyCode()));
+        List<String> shortcutKeys = TemplateDao.getShortcutKeys();
+//
+//        String keyName = NativeKeyEvent.getKeyText(e.getKeyCode());
+//        // 判断是否按下了修饰键
+//        if ((e.getModifiers() == NativeKeyEvent.CTRL_L_MASK || (e.getModifiers() == NativeKeyEvent.CTRL_R_MASK) {
+//            keyName = Objects.equals(keyName, "Ctrl") ? "Ctrl" : "Ctrl+" + keyName;
+//        }
+//        if (event.isAltDown()) {
+//            keyName = Objects.equals(keyName, "Alt") ? "Alt" : "Alt+" + keyName;
+//        }
+//        if (event.isShiftDown()) {
+//            keyName = Objects.equals(keyName, "Shift") ? "Shift" : "Shift+" + keyName;
+//        }
+//        if (event.isMetaDown()) {
+//            keyName = Objects.equals(keyName, "Windows") ? "Windows" : "Windows+" + keyName;
+//        }
+//        if (notKey(sourceKeyName)) {
+//            ArrayList<String> keys = new ArrayList<>(Arrays.asList(keyName.split("\\+")));
+//            if (keys.size() > 1) {
+//                keys.remove(keys.size() - 1);
+//                log.info(keys.toString());
+//                keyName = String.join("+", keys);
+//            }
+//        }
+
     }
 
     public static void main(String[] args) {
