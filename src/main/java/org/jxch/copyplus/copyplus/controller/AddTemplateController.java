@@ -78,6 +78,11 @@ public class AddTemplateController extends RootController implements ControllerI
 
 
     public void add(ActionEvent actionEvent) {
+        if (Objects.equals(usable.getText(), "不可用")) {
+            FXUtils.notification("当前快捷键已经被占用");
+            return;
+        }
+
         String shortcut = shortcutKeys.getText();
         String type = types.getValue();
         String template = jsTemplate.getText();
