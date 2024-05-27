@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<VBox fx:id="panel" alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="io.github.jxch.copyplus.controller.TemplateController">
 
     <HBox alignment="TOP_CENTER">
@@ -13,20 +13,20 @@
                 <TextField fx:id="shortcutKeys" minWidth="100" onKeyPressed="#enterShortcutKeys"/>
             </HBox>
             <HBox>
-                <Label>模板类型：</Label>
-                <ChoiceBox fx:id="types">
-                </ChoiceBox>
+                <Label>模式：</Label>
+                <ChoiceBox fx:id="modelBox"/>
             </HBox>
             <HBox>
-                <Label>直接粘贴：</Label>
-                <ChoiceBox fx:id="isPaste"/>
+                <Label>模板：</Label>
+                <ChoiceBox fx:id="engineBox">
+                </ChoiceBox>
             </HBox>
             <Label fx:id="usable"/>
         </VBox>
 
         <HBox>
-            <Label>JS模板：</Label>
-            <TextArea fx:id="jsTemplate"/>
+            <Label>脚本：</Label>
+            <TextArea fx:id="template"/>
         </HBox>
 
         <VBox alignment="TOP_RIGHT">

@@ -1,4 +1,4 @@
-package io.github.jxch.copyplus.key;
+package io.github.jxch.copyplus.core.model;
 
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;

@@ -1,4 +1,4 @@
-package io.github.jxch.copyplus.util;
+package io.github.jxch.copyplus.core;
 
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
