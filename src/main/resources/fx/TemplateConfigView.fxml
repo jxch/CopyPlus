@@ -11,7 +11,7 @@
             fx:controller="io.github.jxch.copyplus.controller.TemplateConfigController"
             prefHeight="800.0" prefWidth="1000.0">
 
-
+    <Label>AUTO_PASTE 不稳定，可能会失效</Label>
     <VBox fx:id="container">
 
     </VBox>
