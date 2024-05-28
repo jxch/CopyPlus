@@ -1,14 +1,14 @@
 package io.github.jxch.copyplus.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
-import io.github.jxch.copyplus.controller.converter.TemplateEngineConverter;
-import io.github.jxch.copyplus.controller.converter.TemplateModelConverter;
 import io.github.jxch.copyplus.core.CopyPlusUtils;
+import io.github.jxch.copyplus.core.converter.TemplateEngineConverter;
+import io.github.jxch.copyplus.core.converter.TemplateModelConverter;
 import io.github.jxch.copyplus.core.engine.ClipboardTemplateEngine;
 import io.github.jxch.copyplus.core.engine.JSClipboardTemplateEngine;
 import io.github.jxch.copyplus.core.event.TemplateRefreshEvent;
-import io.github.jxch.copyplus.core.model.AutoPasteClipboardTemplateModel;
 import io.github.jxch.copyplus.core.model.ClipboardTemplateModel;
+import io.github.jxch.copyplus.core.model.ModifyPasteboardModel;
 import io.github.jxch.copyplus.db.dao.CopyTemplateRepository;
 import io.github.jxch.copyplus.db.po.CopyTemplate;
 import javafx.fxml.FXML;
@@ -43,8 +43,8 @@ public class TemplateController implements Initializable {
 
     @FXML
     private Label usable;
-    private boolean isUsable = false;
     private CopyTemplate copyTemplate = new CopyTemplate();
+    private String oldShortcutKey = null;
 
     @Autowired
     private List<ClipboardTemplateModel> models;
@@ -59,21 +59,24 @@ public class TemplateController implements Initializable {
         shortcutKeys.setText("");
         if (CopyPlusUtils.hasModifierKey(event)) {
             List<String> keys = new ArrayList<>();
-            keys.add(event.isMetaDown() ? "Meta" : null);
-            keys.add(event.isControlDown() ? "Ctrl" : null);
             keys.add(event.isShiftDown() ? "Shift" : null);
+            keys.add(event.isControlDown() ? "Ctrl" : null);
+            keys.add(event.isMetaDown() ? "Meta" : null);
             keys.add(event.isAltDown() ? "Alt" : null);
             keys.add(CopyPlusUtils.notModifierKey(event) ? key : null);
             keys.removeAll(Collections.singleton(null));
             shortcutKeys.setText(String.join("+", keys));
         }
-        isUsable = CopyPlusUtils.notModifierKey(event) &&
-                Objects.isNull(repository.findByShortcutKey(shortcutKeys.getText()));
-        usable.setText(isUsable ? "可用" : "不可用");
+        usable.setText(CopyPlusUtils.notModifierKey(event) && isUsable() ? "可用" : "不可用");
     }
 
-    public void add() {
-        if (!isUsable) {
+    private boolean isUsable() {
+        return Objects.isNull(repository.findByShortcutKey(shortcutKeys.getText()))
+                || Objects.equals(oldShortcutKey, copyTemplate.getShortcutKey());
+    }
+
+    public void save() {
+        if (!isUsable()) {
             CopyPlusUtils.notification("当前快捷键不可用，请换一个试试");
             return;
         }
@@ -103,7 +106,7 @@ public class TemplateController implements Initializable {
         engineBox.setConverter(SpringUtil.getBean(TemplateEngineConverter.class));
 
         modelBox.getItems().addAll(models);
-        modelBox.setValue(SpringUtil.getBean(AutoPasteClipboardTemplateModel.class));
+        modelBox.setValue(SpringUtil.getBean(ModifyPasteboardModel.class));
         modelBox.setConverter(SpringUtil.getBean(TemplateModelConverter.class));
 
         template.setText(SpringUtil.getBean(JSClipboardTemplateEngine.class).defaultScript());
@@ -117,6 +120,7 @@ public class TemplateController implements Initializable {
                 Objects.equals(copyTemplate.getModel(), model.getTemplateModel())).findFirst().orElseThrow());
         template.setText(copyTemplate.getTemplate());
         shortcutKeys.setText(copyTemplate.getShortcutKey());
+        oldShortcutKey = shortcutKeys.getText();
     }
 
 }

@@ -25,6 +25,7 @@
         <h2.version>2.2.224</h2.version>
         <graalvm.version>21.1.0</graalvm.version>
         <lombok.version>1.18.30</lombok.version>
+        <jna.version>5.14.0</jna.version>
         <jnativehook.version>2.2.2</jnativehook.version>
         <hutool.version>5.8.27</hutool.version>
         <guava.version>33.2.0-jre</guava.version>
@@ -71,6 +72,16 @@
             <groupId>com.github.kwhat</groupId>
             <artifactId>jnativehook</artifactId>
             <version>${jnativehook.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>${jna.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

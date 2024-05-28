@@ -30,7 +30,7 @@
         </HBox>
 
         <VBox alignment="TOP_RIGHT">
-            <Button onAction="#add">确认</Button>
+            <Button onAction="#save">保存</Button>
             <Button onAction="#del">删除</Button>
         </VBox>
     </HBox>

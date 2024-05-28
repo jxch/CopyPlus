@@ -3,7 +3,7 @@ spring:
     name: Copy Plus
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:file:./copy-plus.db;DB_CLOSE_ON_EXIT=TRUE;AUTO_RECONNECT=TRUE
+      jdbc-url: jdbc:h2:file:./db/copy-plus.db;DB_CLOSE_ON_EXIT=TRUE;AUTO_RECONNECT=TRUE
       driver-class-name: org.h2.Driver
       username: copy-plus
       password: copy-plus

@@ -1,4 +1,4 @@
-package io.github.jxch.copyplus.controller.converter;
+package io.github.jxch.copyplus.core.converter;
 
 import io.github.jxch.copyplus.core.model.ClipboardTemplateModel;
 import io.github.jxch.copyplus.core.model.TemplateModel;
